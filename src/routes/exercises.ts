@@ -12,11 +12,11 @@ export default () => {
   router.post("/trackExercise", isAuthenticated, trackExercise);
 
   // admin routes
-  router.post("/createExercise", isAuthenticated, isAdmin as RequestHandler, createExercise );
+  router.post("/admin/createExercise", isAuthenticated, isAdmin as RequestHandler, createExercise );
 
-  router.post("/editExercise", isAuthenticated,isAdmin as RequestHandler, editExercise );
+  router.post("/admin/editExercise", isAuthenticated,isAdmin as RequestHandler, editExercise );
 
-  router.post("/deleteExercise", isAuthenticated, isAdmin as RequestHandler, deleteExercise);
+  router.post("/admin/deleteExercise", isAuthenticated, isAdmin as RequestHandler, deleteExercise);
 
   return router
 }

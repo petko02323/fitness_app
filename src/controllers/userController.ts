@@ -35,7 +35,15 @@ export async function createUser (_req: Request, res: Response, _next: NextFunct
   }
 
   return res.json({
-    data: newUser,
+    data: {
+      id: newUser.id,
+      name: newUser.name,
+      surname: newUser.surname,
+      nickName: newUser.nickName,
+      email: newUser.email,
+      age: newUser.age,
+      role: newUser.role,
+    },
     message: responseDtoMessage({en: "User created successfully", sk: "Používateľ bol úspešne vytvorený"}, getCurrentLocale())
   })
 
@@ -59,7 +67,7 @@ export async function loginUser(_req: Request, res: Response, _next: NextFunctio
 
   const token = jwt.sign({nickName: user.nickName, userId: user.id, userRole: user.role}, process.env.SECRET, {expiresIn: "1h"});
 
-  res.json({token});
+  res.json({data: {token}, message: responseDtoMessage({en: "Login successful", sk: "Prihlásenie úspešné"}, getCurrentLocale())});
 }
 
 export async function getProfile(_req: Request, res: Response, _next: NextFunction): Promise<any> {
@@ -95,7 +103,7 @@ export async function getProfile(_req: Request, res: Response, _next: NextFuncti
     })
   }
 
-  res.json({userWithExercises});
+  res.json({data: userWithExercises, message: responseDtoMessage({en: "User profile", sk: "Profil používateľa"}, getCurrentLocale())});
 }
 
 export async function getAllUsers(_req: Request, res: Response, _next: NextFunction): Promise<any> {
@@ -133,12 +141,15 @@ export async function getUserProfile(_req: Request, res: Response, _next: NextFu
     })
   }
   res.json({
-    name: user.name,
-    surname: user.surname,
-    nickName: user.nickName,
-    email: user.email,
-    age: user.age,
-    role: user.role,
+    data: {
+      name: user.name,
+      surname: user.surname,
+      nickName: user.nickName,
+      email: user.email,
+      age: user.age,
+      role: user.role,
+    },
+    message: responseDtoMessage({en: 'User profile', sk: "Profil používateľa"}, getCurrentLocale())
   });
 }
 
@@ -160,12 +171,15 @@ export async function updateUserProfile(_req: Request, res: Response, _next: Nex
   }
 
   res.json({
-    name: updatedUser.name,
-    surname: updatedUser.surname,
-    nickName: updatedUser.nickName,
-    email: updatedUser.email,
-    age: updatedUser.age,
-    role: updatedUser.role,
+    data: {
+      name: updatedUser.name,
+      surname: updatedUser.surname,
+      nickName: updatedUser.nickName,
+      email: updatedUser.email,
+      age: updatedUser.age,
+      role: updatedUser.role,
+    },
+    message: responseDtoMessage({en: 'User profile updated successfully', sk: "Profil používateľa bol úspešne aktualizovaný"}, getCurrentLocale())
   });
 }
 

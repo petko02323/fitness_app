@@ -1,7 +1,4 @@
 import {Router, RequestHandler} from 'express'
-import {config} from "dotenv";
-
-config();
 
 import isAuthenticated from "../middlewares/authMiddleware";
 import isAdmin from "../middlewares/adminMiddleware";

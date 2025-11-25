@@ -6,7 +6,7 @@ import defineProgram from './program'
 import defineUser from './user'
 import exerciseLog from "./exerciseLog";
 
-const sequelize: Sequelize = new Sequelize('postgresql://postgres:root123@localhost:5432/fitness_app', {
+const sequelize: Sequelize = new Sequelize(`postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@localhost:5432/fitness_app`, {
 	logging: false
 })
 

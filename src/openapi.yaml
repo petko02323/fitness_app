@@ -1,0 +1,629 @@
+  openapi: 3.0.3
+  info:
+    title: FitnessApp API (Exercises & Users)
+    version: 1.0.3
+  servers:
+    - url: http://localhost:8000
+  components:
+    securitySchemes:
+      bearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+    schemas:
+      Program:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+          createdAt:
+            type: string
+            format: date-time
+          updatedAt:
+            type: string
+            format: date-time
+          deletedAt:
+            type: string
+            nullable: true
+        required:
+          - id
+          - name
+      Exercise:
+        type: object
+        properties:
+          id:
+            type: string
+          difficulty:
+            type: string
+            enum: [EASY, MEDIUM, HARD]
+          name:
+            type: string
+          description:
+            type: string
+          createdAt:
+            type: string
+            format: date-time
+          updatedAt:
+            type: string
+            format: date-time
+          deletedAt:
+            type: string
+            nullable: true
+          programID:
+            type: string
+          program:
+            $ref: '#/components/schemas/Program'
+        required:
+          - id
+          - difficulty
+          - name
+      ExercisesListResponse:
+        type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/Exercise'
+          message:
+            type: string
+        required:
+          - data
+          - message
+      TrackExerciseRequest:
+        type: object
+        properties:
+          exerciseId:
+            type: integer
+          state:
+            type: string
+            example: COMPLETED
+          duration:
+            type: integer
+        required:
+          - exerciseId
+          - state
+      ExerciseTrack:
+        type: object
+        properties:
+          timestamp:
+            type: string
+            format: date-time
+          id:
+            type: string
+          state:
+            type: string
+          duration:
+            type: integer
+          userId:
+            type: string
+          exerciseId:
+            type: string
+          createdAt:
+            type: string
+            format: date-time
+          updatedAt:
+            type: string
+            format: date-time
+          deletedAt:
+            type: string
+            nullable: true
+      TrackExerciseResponse:
+        type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/ExerciseTrack'
+          message:
+            type: string
+        required:
+          - data
+          - message
+      CreateExerciseRequest:
+        type: object
+        properties:
+          difficulty:
+            type: string
+          name:
+            type: string
+          programId:
+            type: integer
+        required:
+          - difficulty
+          - name
+          - programId
+      CreateExerciseResponse:
+        type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/Exercise'
+          message:
+            type: string
+        required:
+          - data
+          - message
+      EditExerciseRequest:
+        type: object
+        properties:
+          id:
+            type: integer
+          difficulty:
+            type: string
+          name:
+            type: string
+          description:
+            type: string
+          programId:
+            type: integer
+        required:
+          - id
+      EditExerciseResponse:
+        type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/Exercise'
+          message:
+            type: string
+        required:
+          - data
+          - message
+      DeleteExerciseRequest:
+        type: object
+        properties:
+          id:
+            type: integer
+        required:
+          - id
+      DeleteExerciseResponse:
+        type: object
+        properties:
+          data:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Deleted exercise id (optional)
+          message:
+            type: string
+        required:
+          - data
+          - message
+      UserBase:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+          surname:
+            type: string
+          nickName:
+            type: string
+          email:
+            type: string
+            format: email
+          age:
+            type: integer
+          role:
+            type: string
+            enum: [USER, ADMIN]
+          createdAt:
+            type: string
+            format: date-time
+          updatedAt:
+            type: string
+            format: date-time
+          deletedAt:
+            type: string
+            nullable: true
+        required:
+          - id
+          - nickName
+      CreateUserData:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+          surname:
+            type: string
+          nickName:
+            type: string
+          email:
+            type: string
+            format: email
+          password:
+            type: string
+          age:
+            type: integer
+          role:
+            type: string
+            enum: [USER, ADMIN]
+        required:
+          - id
+          - name
+          - surname
+          - nickName
+          - email
+          - password
+          - age
+          - role
+      CreateUserRequest:
+        type: object
+        properties:
+          name:
+            type: string
+          surname:
+            type: string
+          nickName:
+            type: string
+          email:
+            type: string
+            format: email
+          password:
+            type: string
+          age:
+            type: integer
+          role:
+            type: string
+        required:
+          - name
+          - surname
+          - nickName
+          - email
+          - password
+      CreateUserResponse:
+        type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/CreateUserData'
+          message:
+            type: string
+        required:
+          - data
+          - message
+      LoginRequest:
+        type: object
+        properties:
+          email:
+            type: string
+            format: email
+          password:
+            type: string
+        required:
+          - email
+          - password
+      LoginData:
+        type: object
+        properties:
+          token:
+            type: string
+        required:
+          - token
+      LoginResponse:
+        type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/LoginData'
+          message:
+            type: string
+        required:
+          - data
+          - message
+      UserWithExercisesData:
+        type: object
+        allOf:
+          - $ref: '#/components/schemas/UserBase'
+        properties:
+          exercises:
+            type: array
+            items:
+              $ref: '#/components/schemas/Exercise'
+      UserWithExercisesResponse:
+        type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/UserWithExercisesData'
+          message:
+            type: string
+        required:
+          - data
+          - message
+      AdminUsersListResponse:
+        type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/UserBase'
+          message:
+            type: string
+        required:
+          - data
+          - message
+      RegularUsersListItem:
+        type: object
+        properties:
+          id:
+            type: string
+          nickName:
+            type: string
+        required:
+          - id
+          - nickName
+      RegularUsersListResponse:
+        type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/RegularUsersListItem'
+          message:
+            type: string
+        required:
+          - data
+          - message
+      AdminUserProfileRequest:
+        type: object
+        properties:
+          nickName:
+            type: string
+          requestedChanges:
+            type: object
+            description: Object with fields to change for the target user.
+            properties:
+              name:
+                type: string
+              surname:
+                type: string
+              nickName:
+                type: string
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+              age:
+                type: integer
+              role:
+                type: string
+            additionalProperties: false
+        required:
+          - nickName
+      AdminUserProfileResponse:
+        type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/UserBase'
+          message:
+            type: string
+        required:
+          - data
+          - message
+  paths:
+    /exercises:
+      get:
+        summary: List all exercises
+        responses:
+          '200':
+            description: Array of exercises with program relation wrapped in standard response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ExercisesListResponse'
+    /exercises/trackExercise:
+      post:
+        summary: Track an exercise (user must be authenticated)
+        security:
+          - bearerAuth: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackExerciseRequest'
+        responses:
+          '200':
+            description: Tracking entries created/returned wrapped in standard response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/TrackExerciseResponse'
+          '401':
+            description: Unauthorized
+    /exercises/admin/createExercise:
+      post:
+        summary: Create a new exercise (admin only)
+        description: Requires authenticated admin user.
+        security:
+          - bearerAuth: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateExerciseRequest'
+        responses:
+          '201':
+            description: Created exercise wrapped in standard response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/CreateExerciseResponse'
+          '401':
+            description: Unauthorized
+          '403':
+            description: Forbidden - admin only
+    /exercises/admin/editExercise:
+      post:
+        summary: Edit an exercise (admin only)
+        description: Requires authenticated admin user.
+        security:
+          - bearerAuth: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditExerciseRequest'
+        responses:
+          '200':
+            description: Updated exercise wrapped in standard response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/EditExerciseResponse'
+          '401':
+            description: Unauthorized
+          '403':
+            description: Forbidden - admin only
+    /exercises/admin/deleteExercise:
+      post:
+        summary: Delete an exercise (admin only)
+        description: Requires authenticated admin user.
+        security:
+          - bearerAuth: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteExerciseRequest'
+        responses:
+          '200':
+            description: Deletion result wrapped in standard response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/DeleteExerciseResponse'
+          '401':
+            description: Unauthorized
+          '403':
+            description: Forbidden - admin only
+    /users/createUser:
+      post:
+        summary: Create user (public)
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserRequest'
+        responses:
+          '201':
+            description: User created (includes password in response data) wrapped in standard response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/CreateUserResponse'
+    /user/login:
+      post:
+        summary: Login user
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginRequest'
+        responses:
+          '200':
+            description: Authentication token wrapped in standard response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/LoginResponse'
+          '401':
+            description: Invalid credentials
+    /users/getProfile:
+      get:
+        summary: Get own profile with exercises (authenticated)
+        description: Returns the authenticated user's profile including `exercises`. If the optional query parameter `removeExerciseLogId` is provided, the exercise log with that id will be omitted from the returned `data.exercises` array in the response.
+        security:
+          - bearerAuth: []
+        parameters:
+          - in: query
+            name: removeExerciseLogId
+            schema:
+              type: integer
+            description: Optional. When provided, the exercise log entry with this id will be removed from the `data.exercises` array in the response.
+        responses:
+          '200':
+            description: Profile with exercises (optionally filtered) wrapped in standard response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UserWithExercisesResponse'
+          '401':
+            description: Unauthorized
+    /users/getAllUsers:
+      get:
+        summary: List all users (admin/full or user/minimal)
+        security:
+          - bearerAuth: []
+        description: Returns a full user list for admins and a minimal list for regular users, wrapped in standard response.
+        responses:
+          '200':
+            description: Admin view (full) or User view (minimal) wrapped in standard response
+            content:
+              application/json:
+                schema:
+                  oneOf:
+                    - $ref: '#/components/schemas/AdminUsersListResponse'
+                    - $ref: '#/components/schemas/RegularUsersListResponse'
+          '401':
+            description: Unauthorized
+    /users/admin/getUserProfile:
+      get:
+        summary: Get another user's profile (admin)
+        description: Admin only. Provide `nickName` as query parameter.
+        security:
+          - bearerAuth: []
+        parameters:
+          - in: query
+            name: nickName
+            schema:
+              type: string
+            required: true
+            description: Nickname of the user to return
+        responses:
+          '200':
+            description: User profile wrapped in standard response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/AdminUserProfileResponse'
+          '401':
+            description: Unauthorized
+          '403':
+            description: Forbidden - admin only
+    /users/admin/updateUserProfile:
+      post:
+        summary: Update user profile (admin)
+        description: Admin only.
+        security:
+          - bearerAuth: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUserProfileRequest'
+              example:
+                nickName: "mrkvicka1"
+                requestedChanges:
+                  name: "MatkoX"
+                  age: 50
+        responses:
+          '200':
+            description: Updated user profile wrapped in standard response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/AdminUserProfileResponse'
+          '401':
+            description: Unauthorized
+          '403':
+            description: Forbidden - admin only
