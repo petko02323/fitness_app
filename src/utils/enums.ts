@@ -1,0 +1,16 @@
+export enum EXERCISE_DIFFICULTY {
+	EASY = 'EASY',
+	MEDIUM = 'MEDIUM',
+	HARD = 'HARD'
+}
+
+export enum USER_ROLE {
+  ADMIN = 'ADMIN',
+  USER = 'USER'
+}
+
+export enum EXERCISE_STATE {
+  NOT_STARTED = 'NOT_STARTED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED'
+}
